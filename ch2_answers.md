@@ -852,3 +852,89 @@ val it : float = 0.02
 > area (Square 0.1);;
 val it : float = 0.01
 ```
+
+# 2.21
+```fsharp
+> let area: Shape -> float = function
+-   | Circle radius -> System.Math.PI * radius ** 2.0
+-   | Triangle sides ->
+-     let s' = s sides.Base sides.A sides.B
+-     System.Math.Sqrt(s' * (s' - sides.Base) * (s' - sides.A) * (s' - sides.B))
+-   | Square sideLength -> sideLength ** 2.0
+-   | Rectangle { Height=h; Width=w } -> h * w
+-   | Polygon { Sides=s; Length=l } ->
+-     let num = (float s ** 2.) * l
+-     let den = tan 4. * (180. / l)
+-     num / den;;
+-
+val area : _arg1:Shape -> float
+
+> area (Polygon {Sides=2; Length=1.0});;
+val it : float = 0.01919313677
+
+
+> let perimeter: Shape -> float = function
+-   | Circle rad -> 2. * Math.PI * rad
+-   | Triangle {Base=c; A=a; B=b} -> a+b+c
+-   | Square len -> 4. * len
+-   | Rectangle { Height=h; Width=w } -> 2. * (h + w)
+-   | Polygon { Sides=s; Length=l } -> float s * l;;
+val perimeter : _arg1:Shape -> float
+
+> perimeter Polygon {Sides=5; Length=2.};;
+
+  perimeter Polygon {Sides=5; Length=2.};;
+  ^^^^^^^^^^^^^^^^^
+
+~/code/fpm_book/stdin(187,1): error FS0003: This value is not a function and cannot be applied.
+
+> perimeter (Polygon {Sides=5; Length=2.});;
+val it : float = 10.0
+```
+Not sure I've got the right numbers...
+But also without a primitive "Natural" number type, Polygon is screaming for an
+Opaque Type to ensure `> 2` sides.
+
+
+# 2.22
+```fsharp
+> type Rank = Ace=1 | Two=2 | Three=3 | Four=4 | Five=5 | Six=6 | Seven=7 | Eight=8 | Nine=9 | Jack=10 | Queen=11 | King=12;;
+type Rank =
+  | Ace = 1
+  | Two = 2
+  | Three = 3
+  | Four = 4
+  | Five = 5
+  | Six = 6
+  | Seven = 7
+  | Eight = 8
+  | Nine = 9
+  | Jack = 10
+  | Queen = 11
+  | King = 12
+
+> int King;;
+
+  int King;;
+  ----^^^^
+
+~/code/fpm_book/stdin(2,5): error FS0039: The value or constructor 'King' is not defined. Maybe you want one of the following:
+   int
+
+> int Rank.King;;
+val it : int = 12
+
+> let higherRank (a: Rank) (b: Rank) : bool = int a > int b;;
+val higherRank : a:Rank -> b:Rank -> bool
+
+> higherRank Rank.King Rank.Ace;;
+val it : bool = true
+
+> higherRank King Ace;;
+
+  higherRank King Ace;;
+  -----------^^^^
+
+~/code/fpm_book/stdin(6,12): error FS0039: The value or constructor 'King' is not defined. Maybe you want one of the following:
+   int
+```
