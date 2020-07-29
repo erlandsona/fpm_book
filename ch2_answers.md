@@ -1076,3 +1076,39 @@ I get the point see above.
 
 # 2.29
 ANSWER: No they belong to different specializations of the Choice type parameter EG: int != float.
+
+# 2.30
+```fsharp
+> type Choice<'T, 'U> = One of 'T | Two of 'U;;
+type Choice<'T,'U> =
+  | One of 'T
+  | Two of 'U
+
+> let swapChoice: Choice<'T, 'U> -> Choice<'U, 'T> = function
+-   | One a -> Two a
+-   | Two a -> One a;;
+val swapChoice : _arg1:Choice<'T,'U> -> Choice<'U,'T>
+
+> swapChoice (One 1);;
+
+  swapChoice (One 1);;
+  ^^^^^^^^^^^^^^^^^^
+
+~/code/fpm_book/stdin(174,1): error FS0030: Value restriction. The value 'it' has been inferred to have generic type
+    val it : Choice<'_a,int>
+Either define 'it' as a simple data term, make it a function with explicit arguments or, if you do not intend for it to be generic, add a type annotation.
+
+> swapChoice (One 1: Choice<int, string>);;
+val it : Choice<string,int> = Two 1
+```
+
+# 2.31
+ANSWER: `Choice<'B,'C,'A>`, `Choice<'C,'B,'A>`, `Choice<'B,'A,'C>`, `Choice<'A,'C,'B>`, etc...
+3 ** 2 isomorphic types for any type with 3 polymorphic type variables.
+Which leads to the intuition that for any sum type the number of isomorphisms is 
+the square of the number of type parameters?
+
+# 2.32
+ANSWER:
+- 6 values in a `Two * Three` product (hence the `*` syntax :laughing:),
+- 5 values in a `Choice<Two, Three>` sum.
