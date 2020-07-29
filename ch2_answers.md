@@ -938,3 +938,141 @@ val it : bool = true
 ~/code/fpm_book/stdin(6,12): error FS0039: The value or constructor 'King' is not defined. Maybe you want one of the following:
    int
 ```
+
+# 2.23
+```fsharp
+> let add : Maybe<int> -> Maybe<int> -> Maybe<int> = fun x y ->
+-   match (x, y) with
+-   | (Success a, Success b) -> Success (a + b)
+-   | _ -> Error;;
+val add : x:Maybe<int> -> y:Maybe<int> -> Maybe<int>
+
+> add (Success 1) (Success 2);;
+val it : Maybe<int> = Success 3
+
+> add (Success 1) (Error);;
+val it : Maybe<int> = Error
+
+> add (Success 1) (Error);;
+
+> let subtract : Maybe<int> -> Maybe<int> -> Maybe<int> = fun x y ->
+-   match (x, y) with
+-   | (Success a, Success b) -> Success (a - b)
+-   | _ -> Error;;
+val subtract : x:Maybe<int> -> y:Maybe<int> -> Maybe<int>
+
+> subtract (Success 1) (Error);;
+val it : Maybe<int> = Error
+
+> subtract (Success 1) (Success 2);;
+val it : Maybe<int> = Success -1
+
+> let multiply : Maybe<int> -> Maybe<int> -> Maybe<int> = fun x y ->
+-   match (x, y) with
+-   | (Success a, Success b) -> Success (a * b)
+-   | _ -> Error;;
+val multiply : x:Maybe<int> -> y:Maybe<int> -> Maybe<int>
+
+> multiply (Success 1) (Success 2);;
+val it : Maybe<int> = Success 2
+
+> multiply (Success 1) Error;;
+val it : Maybe<int> = Error
+> let add: option<int> -> option<int> -> option<int> = Option.map2 (+);;
+val add : (int option -> int option -> int option)
+
+> let subtract: option<int> -> option<int> -> option<int> = Option.map2 (-);;
+val subtract : (int option -> int option -> int option)
+
+> let multiply: option<int> -> option<int> -> option<int> = Option.map2 (*);;
+val multiply : (int option -> int option -> int option)
+
+> add (Some 1) None;;
+val it : int option = None
+
+> add (Some 1) (Some 2);;
+val it : int option = Some 3
+
+> multiply (Some 1) (Some 2);;
+val it : int option = Some 2
+
+> multiply (Some 1) None;;
+val it : int option = None
+
+> subtract (Some 1) (Some 2);;
+val it : int option = Some -1
+
+> subtract (Some 1) None;;
+val it : int option = None
+```
+
+# 2.24
+```fsharp
+> let describe ({Name=n; Value=v}: Named<Shape>): string = n + " has area of " + string (area v) + " and a perimeter of " + string (- perimeter v);;
+val describe : Named<Shape> -> string
+
+> let c = {Name= "Big Circle"; Value=Circle 100.};;
+val c : Named<Shape> = { Name = "Big Circle"
+                         Value = Circle 100.0 }
+
+> describe c;;
+val it : string =
+  "Big Circle has area of 31415.926535897932 and a perimeter of 628.3185307179587"
+
+
+> let t = {Name="Tiny Triangle"; Value=Triangle{A=0.3;B=0.4;C=0.5}};;
+val t : Named<Shape> = { Name = "Tiny Triangle"
+                         Value = Triangle { A = 0.3
+                                            B = 0.4
+                                            C = 0.5 } }
+
+> describe t;;
+val it : string =
+  "Tiny Triangle has area of 0.059999999999999984 and a perimeter of 1.2"
+```
+
+# 2.25
+```fsharp
+> type Quintuple<'T> = 'T * 'T * 'T * 'T * 'T;;
+type Quintuple<'T> = 'T * 'T * 'T * 'T * 'T
+
+> let reorder (a,b,c,d,e) = (c,e,a,b,d);;
+val reorder : a:'a * b:'b * c:'c * d:'d * e:'e -> 'c * 'e * 'a * 'b * 'd
+
+> let reorder ((a,b,c,d,e): Quintuple<'T>): Quintuple<'T> = (c,e,a,b,d);;
+val reorder : 'T * 'T * 'T * 'T * 'T -> Quintuple<'T>
+```
+
+# 2.26
+```fsharp
+> type Rank = Ace | Pip of int | Jack | Queen | King;;
+type Rank =
+  | Ace
+  | Pip of int
+  | Jack
+  | Queen
+  | King
+
+> let cards: List<Rank> = [Ace; Pip 1; Pip 2; Pip 3; Pip 4; Pip 5; Pip 6; Pip 7; Pip 8; Pip 9; Jack; Queen; King];;
+val cards : List<Rank> =
+  [Ace; Pip 1; Pip 2; Pip 3; Pip 4; Pip 5; Pip 6; Pip 7; Pip 8; Pip 9; Jack;
+   Queen; King]
+```
+
+# 2.27
+```fsharp
+> type Choice<'a,'b,'c> = | A of 'a | B of 'b | C of 'c;;
+type Choice<'a,'b,'c> =
+  | A of 'a
+  | B of 'b
+  | C of 'c
+
+> let choices: List<Choice<int,bool,string>> = [A 1;B true; C "things"];;
+val choices : List<Choice<int,bool,string>> = [A 1; B true; C "things"]
+```
+
+# 2.28
+I get the point see above.
+
+# 2.29
+ANSWER: No they belong to different specializations of the Choice type parameter EG: int != float.
