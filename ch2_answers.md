@@ -1112,3 +1112,14 @@ the square of the number of type parameters?
 ANSWER:
 - 6 values in a `Two * Three` product (hence the `*` syntax :laughing:),
 - 5 values in a `Choice<Two, Three>` sum.
+
+# 2.33
+
+# 2.34
+This function should be called `bimap` because pair is a BiFunctor and the `map` function
+should only run over the left side.
+
+# 2.35
+Product type isomorphic to `Choice<'A,'A>` as long as the type parameters are the same
+then you can use a tuple of `bool * 'A` to represent each case.
+Of if you want to be kitchy `Choice<unit, unit> * 'A`
